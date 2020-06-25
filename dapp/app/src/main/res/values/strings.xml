@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ZAct</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_home">MainActivity</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_contact">Contacts</string>
+    <string name="title_profile">Profile</string>
 </resources>
