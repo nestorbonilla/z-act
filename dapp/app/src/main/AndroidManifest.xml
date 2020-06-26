@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.HomeActivity"
             android:label="@string/title_activity_home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,8 +41,15 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:name=".activity.MapsActivity"
+            android:label="@string/title_activity_event">
+
+        </activity>
+
+        <activity
+            android:name=".activity.DashboardDetailActivity"
+            android:theme="@style/AppThemeDetail"
+            android:label="@string/title_activity_event">
 
         </activity>
     </application>

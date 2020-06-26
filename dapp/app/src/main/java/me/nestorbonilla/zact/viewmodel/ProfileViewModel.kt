@@ -1,4 +1,4 @@
-package me.nestorbonilla.zact.ui.profile
+package me.nestorbonilla.zact.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

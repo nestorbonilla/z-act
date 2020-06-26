@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="me.nestorbonilla.zact.ui.dashboard.DashboardFragment"
+        android:name="me.nestorbonilla.zact.fragment.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_contact"
-        android:name="me.nestorbonilla.zact.ui.contact.ContactFragment"
+        android:name="me.nestorbonilla.zact.fragment.ContactFragment"
         android:label="@string/title_contact"
         tools:layout="@layout/fragment_contact" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="me.nestorbonilla.zact.ui.profile.ProfileFragment"
+        android:name="me.nestorbonilla.zact.fragment.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

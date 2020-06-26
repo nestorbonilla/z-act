@@ -1,4 +1,4 @@
-package me.nestorbonilla.zact
+package me.nestorbonilla.zact.activity
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -21,7 +21,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.util.jar.Manifest
+import me.nestorbonilla.zact.GeofenceHelper
+import me.nestorbonilla.zact.R
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
