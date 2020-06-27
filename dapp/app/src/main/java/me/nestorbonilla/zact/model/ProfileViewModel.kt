@@ -1,13 +1,13 @@
-package me.nestorbonilla.zact.viewmodel
+package me.nestorbonilla.zact.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ContactViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is contact Fragment"
+        value = "This is profile Fragment"
     }
     val text: LiveData<String> = _text
 }

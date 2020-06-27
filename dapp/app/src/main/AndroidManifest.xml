@@ -50,7 +50,11 @@
             android:name=".activity.DashboardDetailActivity"
             android:theme="@style/AppThemeDetail"
             android:label="@string/title_activity_event">
+        </activity>
 
+        <activity
+            android:name=".activity.DashboardCreateActivity"
+            android:label="@string/title_activity_event">
         </activity>
     </application>
 

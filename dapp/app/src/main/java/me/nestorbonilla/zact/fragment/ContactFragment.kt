@@ -9,24 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import me.nestorbonilla.zact.R
-import me.nestorbonilla.zact.viewmodel.ContactViewModel
+import me.nestorbonilla.zact.model.Contact
 
 class ContactFragment : Fragment() {
 
-    private lateinit var contactViewModel: ContactViewModel
+    private lateinit var contact: Contact
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        contactViewModel =
-            ViewModelProviders.of(this).get(ContactViewModel::class.java)
+        //contact = ViewModelProviders.of(this).get(Contact::class.java)
         val root = inflater.inflate(R.layout.fragment_contact, container, false)
-        val textView: TextView = root.findViewById(R.id.text_contact)
-        contactViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+        //val textView: TextView = root.findViewById(R.id.text_contact)
+        //contact.text.observe(viewLifecycleOwner, Observer {
+        //    textView.text = it
+        //})
         return root
     }
 }
