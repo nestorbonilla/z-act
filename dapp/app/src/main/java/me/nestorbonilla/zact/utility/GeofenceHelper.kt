@@ -1,4 +1,4 @@
-package me.nestorbonilla.zact
+package me.nestorbonilla.zact.utility
 
 import android.app.PendingIntent
 import android.content.Context
