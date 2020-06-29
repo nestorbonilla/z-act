@@ -98,7 +98,7 @@
         android:layout_marginTop="45dp">
         <LinearLayout
             android:orientation="horizontal"
-            android:paddingLeft="25dp"
+            android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
@@ -106,17 +106,19 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_wallet"/>
             <TextView
+                android:id="@+id/profile_address"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:text="z3252212309581328507345"/>
+                android:text=""/>
         </LinearLayout>
 
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/profile_button"
         android:textColor="#fff"
         android:background="@color/colorPrimary"
         android:layout_marginLeft="16dp"
@@ -126,7 +128,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:text="Update"/>
 
 </LinearLayout>

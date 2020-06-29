@@ -30,9 +30,9 @@ class TutorialActivity: AppCompatActivity() {
         activity = this
         preference = getSharedPreferences("INTRO_SLIDER" , Context.MODE_PRIVATE)
 
-        fragment1.setTitle("Welcome")
-        fragment2.setTitle("To CodeAndroid")
-        fragment3.setTitle("YouTube Channel")
+        fragment1.setTitle("Welcome to ZAct")
+        fragment2.setTitle("step 2")
+        fragment3.setTitle("step 3")
 
         adapter = TutorialAdapter(supportFragmentManager)
         adapter.list.add(fragment1)

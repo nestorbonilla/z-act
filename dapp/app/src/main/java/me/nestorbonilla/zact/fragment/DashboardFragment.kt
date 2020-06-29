@@ -2,6 +2,7 @@ package me.nestorbonilla.zact.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,9 @@ class DashboardFragment : Fragment() {
                 if (t.size == 0) {
                     dashboard_recyclerview.isVisible = false
                     dashboard_empty.isVisible = true
+                } else {
+                    dashboard_recyclerview.isVisible = true
+                    dashboard_empty.isVisible = false
                 }
             }
         )
@@ -60,18 +64,4 @@ class DashboardFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        actViewModel.getAllActs().observe(this,
-            Observer<List<ActModel>> {
-                    t -> adapter.setActs(t!!)
-                if (t.size == 0) {
-                    dashboard_recyclerview.isVisible = false
-                    dashboard_empty.isVisible = true
-                }
-            }
-        )
-    }
-
-    
 }
