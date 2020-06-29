@@ -12,9 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.nestorbonilla.zact.model.ActModel
-import me.nestorbonilla.zact.model.Contact
+import me.nestorbonilla.zact.model.ContactModel
+import me.nestorbonilla.zact.model.GroupModel
 
-@Database(version = 1, entities = [ActModel::class, Contact::class])
+@Database(version = 1, entities = [ActModel::class, ContactModel::class, GroupModel::class])
 abstract class ZactDatabase: RoomDatabase() {
 
     abstract fun zactDao(): ZactDao
@@ -49,7 +50,7 @@ class PopulateDbAsyncTask(db: ZactDatabase?) : AsyncTask<Unit, Unit, Unit>() {
     private val noteDao = db?.zactDao()
 
     override fun doInBackground(vararg p0: Unit?) {
-        noteDao?.insertAct(ActModel(1,"Title 1", "description 1"))
-        noteDao?.insertAct(ActModel(2,"Title 2", "description 2"))
+        //noteDao?.insertAct(ActModel(1,"Title 1", "description 1"))
+        //noteDao?.insertAct(ActModel(2,"Title 2", "description 2"))
     }
 }

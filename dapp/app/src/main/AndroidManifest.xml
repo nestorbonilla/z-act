@@ -42,27 +42,30 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activity.MapsActivity"
-            android:label="@string/title_activity_event">
-
-        </activity>
+            android:name=".activity.TutorialActivity"
+            android:theme="@style/AppThemeDetail" />
 
         <activity
             android:name=".activity.DashboardDetailActivity"
             android:theme="@style/AppThemeDetail"
-            android:label="@string/title_activity_event">
-        </activity>
+            android:label="" />
 
         <activity
             android:name=".activity.DashboardCreateActivity"
-            android:label="@string/title_activity_event">
-        </activity>
+            android:label="@string/title_activity_event" />
 
         <activity
-            android:name=".activity.TutorialActivity"
-            android:theme="@style/AppThemeDetail"
-            android:label="@string/title_activity_event">
-        </activity>
+            android:name=".activity.ContactDetailActivity"
+            android:theme="@style/AppThemeDetail" />
+
+        <activity
+            android:name=".activity.ContactCreateActivity"
+            android:theme="@style/AppThemeDetail" />
+
+        <activity
+            android:name=".activity.MapsActivity"
+            android:label="Maps" />
+
     </application>
 
 </manifest>

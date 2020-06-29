@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/dashboard_image"
+            android:id="@+id/contact_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
@@ -30,7 +30,7 @@
                 android:background="@color/colorPrimary"></LinearLayout>
 
             <LinearLayout
-                android:id="@+id/info_box"
+                android:id="@+id/contact_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -40,21 +40,19 @@
 
                 <!-- Title -->
                 <TextView
-                    android:id="@+id/dashboard_title"
+                    android:id="@+id/contact_title"
                     style="@style/ExploreItem.Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="4dp"
-                    android:textColor="@color/colorAccent"
                     android:text="title" />
 
                 <!-- Subtitle -->
                 <TextView
-                    android:id="@+id/dashboard_subtitle"
+                    android:id="@+id/contact_subtitle"
                     style="@style/ExploreItem.Subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
                     android:text="subtitle" />
 
             </LinearLayout>

@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.activity.DashboardCreateActivity
@@ -23,6 +25,8 @@ class DashboardFragment : Fragment() {
     //val items:ArrayList<String> = ArrayList()
     private lateinit var actViewModel: ActViewModel
     private lateinit var adapter: DashboardAdapter
+    private lateinit var dashboard_recyclerview: RecyclerView
+    private lateinit var dashboard_empty: SimpleDraweeView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,12 +36,20 @@ class DashboardFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
         //addItems()
         //ZactDatabase.get(activity!!.application).getZactDao().getActions()
-        val dashboard_recyclerview: RecyclerView = root.findViewById(R.id.dashboard_recyclerview)
+        dashboard_recyclerview = root.findViewById(R.id.dashboard_recyclerview)
+        dashboard_empty = root.findViewById(R.id.dashboard_empty)
         dashboard_recyclerview.layoutManager = LinearLayoutManager(inflater.context, LinearLayoutManager.VERTICAL, false)
         adapter = DashboardAdapter(inflater.context)
         actViewModel = ViewModelProviders.of(this).get(ActViewModel::class.java)
         actViewModel.getAllActs().observe(this,
-            Observer<List<ActModel>> { t -> adapter.setActs(t!!) })
+            Observer<List<ActModel>> {
+                t -> adapter.setActs(t!!)
+                if (t.size == 0) {
+                    dashboard_recyclerview.isVisible = false
+                    dashboard_empty.isVisible = true
+                }
+            }
+        )
         dashboard_recyclerview.adapter = adapter
 
         val dashboard_fab: FloatingActionButton = root.findViewById(R.id.dashboard_fab)
@@ -46,6 +58,19 @@ class DashboardFragment : Fragment() {
             startActivity(intent)
         }
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        actViewModel.getAllActs().observe(this,
+            Observer<List<ActModel>> {
+                    t -> adapter.setActs(t!!)
+                if (t.size == 0) {
+                    dashboard_recyclerview.isVisible = false
+                    dashboard_empty.isVisible = true
+                }
+            }
+        )
     }
 
     
