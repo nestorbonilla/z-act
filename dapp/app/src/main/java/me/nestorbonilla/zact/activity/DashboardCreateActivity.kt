@@ -29,9 +29,9 @@ class DashboardCreateActivity: AppCompatActivity() {
     private var db: ZactDatabase? = null
     private var zactDao: ZactDao? = null
 
-    private val config = App.instance.defaultConfig
-    private val initializer = Initializer(App.instance, host = config.host, port = config.port)
-    private val birthday = config.loadBirthday()
+    //private val config = App.instance.defaultConfig
+    //private val initializer = Initializer(App.instance, host = config.host, port = config.port)
+    //private val birthday = config.loadBirthday()
 
     private lateinit var synchronizer: Synchronizer
     private lateinit var keyManager: SampleStorageBridge
@@ -67,7 +67,7 @@ class DashboardCreateActivity: AppCompatActivity() {
             getSupportActionBar()?.setDisplayShowHomeEnabled(true);
         }
 
-        startSynchronizer()
+        //startSynchronizer()
 
         dashboard_create_button.setOnClickListener({
             Observable.fromCallable(
@@ -84,14 +84,14 @@ class DashboardCreateActivity: AppCompatActivity() {
             this.finish()
         })
     }
-
+/*
     private fun startSynchronizer() {
         lifecycleScope.apply {
             synchronizer.start(this)
         }
     }
 
-    /*private fun onSend(unused: View) {
+    private fun onSend(unused: View) {
         isSending = true
         val amount = amountInput.text.toString().toDouble().convertZecToZatoshi()
         val toAddress = addressInput.text.toString().trim()
