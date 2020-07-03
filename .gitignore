@@ -12,3 +12,4 @@
 /dapp/captures
 .externalNativeBuild
 .cxx
+*.env
