@@ -4,5 +4,8 @@
     <string name="title_activity_home">MainActivity</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_contact">Contacts</string>
-    <string name="title_profile">Profile</string>
+    <string name="title_setting">Settings</string>
+    <string name="title_attendee">Attendee</string>
+    <string name="title_creator">Creator</string>
+    <string name="seed_indication">*Please, insert your seed phrase for your ZCash wallet to be able to create events and send private messages to it.</string>
 </resources>

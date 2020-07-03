@@ -8,5 +8,9 @@ data class ActModel (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var title: String,
-    var description: String
+    var fromAddress: String,
+    var publicInformation: String,
+    var meetingPointRadius: Int,
+    var meetingPoint: String,
+    var preSeed: String
 )

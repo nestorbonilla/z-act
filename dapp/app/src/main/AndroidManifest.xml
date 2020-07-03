@@ -46,12 +46,12 @@
             android:theme="@style/AppThemeDetail" />
 
         <activity
-            android:name=".activity.DashboardDetailActivity"
+            android:name=".activity.AttendeeDetailActivity"
             android:theme="@style/AppThemeDetail"
             android:label="" />
 
         <activity
-            android:name=".activity.DashboardCreateActivity"
+            android:name=".activity.CreatorDetailActivity"
             android:label="@string/title_activity_event" />
 
         <activity

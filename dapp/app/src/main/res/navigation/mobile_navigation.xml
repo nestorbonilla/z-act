@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_dashboard">
+    app:startDestination="@+id/navigation_attendee">
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="me.nestorbonilla.zact.fragment.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_attendee"
+        android:name="me.nestorbonilla.zact.fragment.AttendeeFragment"
+        android:label="@string/title_attendee"
+        tools:layout="@layout/fragment_attendee" />
 
     <fragment
-        android:id="@+id/navigation_contact"
-        android:name="me.nestorbonilla.zact.fragment.ContactFragment"
-        android:label="@string/title_contact"
-        tools:layout="@layout/fragment_contact" />
+        android:id="@+id/navigation_creator"
+        android:name="me.nestorbonilla.zact.fragment.CreatorFragment"
+        android:label="@string/title_creator"
+        tools:layout="@layout/fragment_creator" />
 
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="me.nestorbonilla.zact.fragment.ProfileFragment"
-        android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:id="@+id/navigation_setting"
+        android:name="me.nestorbonilla.zact.fragment.SettingFragment"
+        android:label="@string/title_setting"
+        tools:layout="@layout/fragment_setting" />
 </navigation>
