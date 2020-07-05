@@ -64,7 +64,6 @@
             android:paddingTop="24dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/attendee_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/card_margin">
@@ -91,8 +90,8 @@
                         android:layout_height="1dp"
                         android:background="#CCC" />
 
-                    <WebView
-                        android:id="@+id/attendee_detail_web_view"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/attendee_detail_public"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="16dp"
@@ -103,55 +102,23 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/attendee_information"
+            <Button
+                android:id="@+id/creator_detail_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/card_margin"
-                android:layout_marginLeft="@dimen/card_margin"
-                android:layout_marginRight="@dimen/card_margin">
-
-                <LinearLayout
-                    style="@style/Widget.CardContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:text="Puzzle"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#CCC" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:text="This is a transaction text" />
-                    <EditText
-                        android:id="@+id/attendee_words"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorPrimary"
+                android:layout_margin="16dp"
+                android:elevation="3dp"
+                android:text="View private information"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/attendee_detail_fab"
+        android:id="@+id/attendee_map_button"
         android:layout_width="@dimen/size_fab"
         android:layout_height="@dimen/size_fab"
         android:layout_margin="@dimen/fab_margin"

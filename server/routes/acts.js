@@ -9,15 +9,17 @@ router.get('/', async (req, res) => {
     } catch (err) {
         res.json(err);
     }
-    res.send('yeap in acts');
+    res.send('Acts');
 });
 
 router.post('/', async (req, res) => {
     const act = new Act({
-        title: req.body.title,
         fromAddress: req.body.fromAddress,
-        publicInfo: req.body.publicInfo,
-        preSeed: req.body.preSeed
+        seed: req.body.seed,
+        title: req.body.title,
+        publicInformation: req.body.publicInformation,
+        meetingPointRadius: req.body.meetingPointRadius,
+        meetingPoint: req.body.meetingPoint
     });
     try {
         const savedAct = await act.save();
@@ -45,7 +47,16 @@ router.delete('/:actId', async (req, res) => {
     }
 });
 
-router.patch('/:actId', async (req, res) => {
+router.delete('/', async (req, res) => {
+    try {
+        const act = await Act.remove();
+        res.json(act);   
+    } catch (err) {
+        res.json(err);
+    }
+});
+
+router.put('/:actId', async (req, res) => {
     try {
         const act = await Act.updateOne(
             { 
@@ -53,10 +64,10 @@ router.patch('/:actId', async (req, res) => {
             },
             {
                 $set: {
-                    title: req.body.title,
                     fromAddress: req.body.fromAddress,
-                    publicInfo: req.body.publicInfo,
-                    preSeed: req.body.preSeed,
+                    seed: req.body.seed,
+                    title: req.body.title,
+                    publicInformation: req.body.publicInformation,
                     meetingPointRadius: req.body.meetingPointRadius,
                     meetingPoint: req.body.meetingPoint
                 }

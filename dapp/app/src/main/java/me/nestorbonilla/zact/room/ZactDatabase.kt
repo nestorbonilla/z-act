@@ -1,21 +1,16 @@
 package me.nestorbonilla.zact.room
 
-import android.app.Application
 import android.content.Context
 import android.os.AsyncTask
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.squareup.okhttp.Dispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import me.nestorbonilla.zact.model.ActModel
-import me.nestorbonilla.zact.model.ContactModel
-import me.nestorbonilla.zact.model.GroupModel
+import me.nestorbonilla.zact.model.AttendeeModel
+import me.nestorbonilla.zact.model.CreatorModel
 
-@Database(version = 1, entities = [ActModel::class, ContactModel::class, GroupModel::class])
+@Database(version = 1, entities = [ActModel::class, CreatorModel::class, AttendeeModel::class])
 abstract class ZactDatabase: RoomDatabase() {
 
     abstract fun zactDao(): ZactDao
@@ -30,6 +25,7 @@ abstract class ZactDatabase: RoomDatabase() {
                     INSTANCE = Room.databaseBuilder(context.applicationContext, ZactDatabase::class.java, DB_NAME)
                         .fallbackToDestructiveMigration()
                         .addCallback(roomCallback)
+                        .allowMainThreadQueries()
                         .build()
                 }
             }
@@ -47,10 +43,15 @@ abstract class ZactDatabase: RoomDatabase() {
 }
 
 class PopulateDbAsyncTask(db: ZactDatabase?) : AsyncTask<Unit, Unit, Unit>() {
-    private val noteDao = db?.zactDao()
+    private val zactDao = db?.zactDao()
 
     override fun doInBackground(vararg p0: Unit?) {
-        //noteDao?.insertAct(ActModel(1,"Title 1", "description 1"))
-        //noteDao?.insertAct(ActModel(2,"Title 2", "description 2"))
+        zactDao?.insertAttendee(AttendeeModel(1, 0))
+        zactDao?.insertCreator(CreatorModel(
+            1,
+            "inflict canyon owner clog link divert gym ride resist ethics dust hazard run enemy venue weather unaware assist pipe salute damage burden observe notable",
+            "zs1wk3v6543v08yah3tczk8sjxnlurm57g2rfvvjdres4zd7vw37xxlk4e3c3x3pr68staqk5r34un",
+            0)
+        )
     }
 }

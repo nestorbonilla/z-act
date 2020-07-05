@@ -15,14 +15,14 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.activity.CreatorDetailActivity
-import me.nestorbonilla.zact.adapter.AttendeeAdapter
+import me.nestorbonilla.zact.adapter.CreatorAdapter
 import me.nestorbonilla.zact.model.ActModel
 import me.nestorbonilla.zact.viewmodel.ActViewModel
 
 class CreatorFragment : Fragment() {
 
     private lateinit var actViewModel: ActViewModel
-    private lateinit var adapter: AttendeeAdapter
+    private lateinit var adapter: CreatorAdapter
     private lateinit var creator_recyclerview: RecyclerView
     private lateinit var creator_empty: SimpleDraweeView
 
@@ -35,9 +35,9 @@ class CreatorFragment : Fragment() {
         creator_recyclerview = root.findViewById(R.id.creator_recyclerview)
         creator_empty = root.findViewById(R.id.creator_empty)
         creator_recyclerview.layoutManager = LinearLayoutManager(inflater.context, LinearLayoutManager.VERTICAL, false)
-        adapter = AttendeeAdapter(inflater.context)
+        adapter = CreatorAdapter(inflater.context)
         actViewModel = ViewModelProviders.of(this).get(ActViewModel::class.java)
-        actViewModel.getAllActs().observe(this,
+        actViewModel.getAllActs().observe(viewLifecycleOwner,
             Observer<List<ActModel>> {
                     t -> adapter.setActs(t!!)
                 if (t.size == 0) {

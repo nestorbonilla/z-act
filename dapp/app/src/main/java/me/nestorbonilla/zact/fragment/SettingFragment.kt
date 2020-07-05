@@ -1,14 +1,16 @@
 package me.nestorbonilla.zact.fragment
 
-import android.content.Context
+import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
 import cash.z.ecc.android.sdk.Synchronizer
@@ -17,13 +19,26 @@ import cash.z.ecc.android.sdk.ext.collectWith
 import kotlinx.android.synthetic.main.seed_dialog.view.*
 import me.nestorbonilla.zact.App
 import me.nestorbonilla.zact.R
+import me.nestorbonilla.zact.activity.HomeActivity
+import me.nestorbonilla.zact.model.AttendeeModel
+import me.nestorbonilla.zact.model.CreatorModel
+import me.nestorbonilla.zact.room.ZactDao
+import me.nestorbonilla.zact.room.ZactDatabase
 import java.nio.charset.StandardCharsets
+
 
 class SettingFragment : Fragment() {
 
-    private lateinit var address: String
-    private lateinit var profile_address: TextView
-    private var seedPhrase: String = ""
+    private var db: ZactDatabase? = null
+    private var zactDao: ZactDao? = null
+    private lateinit var creatorModel: CreatorModel
+    private lateinit var attendeeModel: AttendeeModel
+
+    private lateinit var profile_role_text: AppCompatTextView
+    private lateinit var profile_action_text: AppCompatTextView
+    private lateinit var profile_action_count_text: AppCompatTextView
+    private lateinit var profile_address: AppCompatTextView
+    private lateinit var profile_button: AppCompatButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,30 +47,50 @@ class SettingFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_setting, container, false)
+        profile_role_text = root.findViewById(R.id.profile_role_text)
+        profile_action_text = root.findViewById(R.id.profile_action_text)
+        profile_action_count_text = root.findViewById(R.id.profile_action_count_text)
         profile_address = root.findViewById(R.id.profile_address)
+        profile_button = root.findViewById(R.id.profile_button)
+
+        db = ZactDatabase.getDatabase(requireContext())
+        zactDao = db?.zactDao()
+
+        //profile_address = root.findViewById(R.id.profile_address)
         //profile_address.text = address
 
         //val profile_seed_phrase: TextInputLayout = root.findViewById(R.id.profile_seed_phrase)
 
         //val profile_seed_phrase: String = ""
+        loadValues()
 
         val profile_button: AppCompatButton = root.findViewById(R.id.profile_button)
         profile_button.setOnClickListener{
-            if (seedPhrase.length == 0) {
+
+            // attendee profile
+            if (creatorModel.seed.length == 0) {
                 showSeedDialog()
+            } else {
+                //var refresh: Intent = Intent(requireContext(), HomeActivity::class.java)
+                //startActivity(refresh)
             }
+
             //val intent = Intent(inflater.context, ProfileDetailActivity::class.java)
             //startActivity(intent)
             //var seedPhrase = profile_seed_phrase.editText?.text.toString()
-            seedPhrase = "seed phrase"
-            Log.d("@TWIG", seedPhrase)
-            App.instance.onCreateWallet(seedPhrase)
+            //seedPhrase = "seed phrase"
+            //Log.d("@TWIG", seedPhrase)
+            App.instance.onCreateWallet("")
             App.instance.synchronizer.status.collectWith(App.instance.appScope, ::onStatusUpdate)
             App.instance.synchronizer.clearedTransactions.collectWith(App.instance.appScope, ::onStatusTransaction)
         }
 
+
+
         return root
     }
+
+
 
     private fun onStatusTransaction(pagedList: PagedList<ConfirmedTransaction>) {
         val lastTransaction = pagedList.lastOrNull()
@@ -63,7 +98,7 @@ class SettingFragment : Fragment() {
     }
 
     private fun onStatusUpdate(status: Synchronizer.Status) {
-        profile_address.text = status.name
+        //profile_address.text = status.name
     }
 
     inline fun ByteArray?.toUtf8Memo(): String {
@@ -88,7 +123,36 @@ class SettingFragment : Fragment() {
             //dismiss dialog
             mAlertDialog.dismiss()
             //get text from EditTexts of custom layout
-            seedPhrase = mDialogView.seed_words.text.toString()
+            creatorModel.seed = mDialogView.seed_words.text.toString()
+        }
+    }
+
+    private fun loadValues() {
+        with(zactDao) {
+            creatorModel = this?.getCreator(1)!!
+        }
+
+        // verify if the user is a creator
+        if (creatorModel.seed.isEmpty()) {
+
+            // the user is an attendee
+            with(zactDao) {
+                attendeeModel = this?.getAttendee(1)!!
+            }
+            profile_role_text.setText("ZAct Attendee")
+            profile_action_text.setText("Attendeed")
+            profile_action_count_text.setText(attendeeModel.actsAttended.toString())
+            profile_address.setText("only for creators")
+            profile_button.setText("become a creator")
+            profile_button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorLogin))
+
+        } else {
+            profile_role_text.setText("ZAct Creator")
+            profile_action_text.setText("Created")
+            profile_action_count_text.setText(creatorModel.actsCreated.toString())
+            profile_address.setText(creatorModel.address)
+            profile_button.setText("logout")
+            profile_button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorLogout))
         }
     }
 }

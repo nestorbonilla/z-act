@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activity.HomeActivity"
             android:label="@string/title_activity_home">
@@ -51,20 +52,21 @@
             android:label="" />
 
         <activity
+            android:name=".activity.AttendeeMapActivity"
+            android:theme="@style/AppThemeDetail"
+            android:label="" />
+
+        <activity
             android:name=".activity.CreatorDetailActivity"
-            android:label="@string/title_activity_event" />
+            android:label="Action Detail" />
 
         <activity
-            android:name=".activity.ContactDetailActivity"
-            android:theme="@style/AppThemeDetail" />
+            android:name=".activity.CreatorMapActivity"
+            android:label="Map Location" />
 
         <activity
-            android:name=".activity.ContactCreateActivity"
-            android:theme="@style/AppThemeDetail" />
-
-        <activity
-            android:name=".activity.ProfileDetailActivity"
-            android:theme="@style/AppThemeDetail" />
+            android:name=".activity.CreatorPrivateActivity"
+            android:label="Action Private" />
 
         <activity
             android:name=".activity.MapsActivity"

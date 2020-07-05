@@ -18,7 +18,7 @@
             android:layout_marginBottom="20dp"
             android:hint="From">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/creator_from"
+                android:id="@+id/creator_private_from"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false" />
@@ -28,68 +28,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:hint="Title">
+            android:hint="To">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/creator_title"
+                android:id="@+id/creator_private_to"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:enabled="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:hint="Public message">
+            android:hint="Private message">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/creator_public"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lines="4" />
+                android:lines="7" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Missing words">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/creator_missing"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/creator_map_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:background="@color/common_google_signin_btn_text_light_disabled"
-            android:layout_marginBottom="10dp"
-            android:elevation="3dp"
-            android:textColor="@color/colorWhite"
-            android:text="Set Map Location"
-            app:layout_constraintBottom_toBottomOf="parent" />
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/creator_private_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:background="@color/common_google_signin_btn_text_light_disabled"
-            android:elevation="3dp"
-            android:textColor="@color/colorWhite"
-            android:text="Set Private Information"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_height="250dp" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/creator_detail_button"
+        android:id="@+id/creator_private_send_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
         android:background="@color/colorPrimary"
         android:elevation="3dp"
-        android:text="Create"
+        android:text="Send"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

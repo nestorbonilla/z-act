@@ -7,10 +7,12 @@ import androidx.room.PrimaryKey;
 data class ActModel (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
-    var title: String,
+    var _id: String,
     var fromAddress: String,
+    var actAddress: String,             // only local
+    var seed: String,                   // full seed only local
+    var title: String,
     var publicInformation: String,
     var meetingPointRadius: Int,
-    var meetingPoint: String,
-    var preSeed: String
+    var meetingPoint: String
 )

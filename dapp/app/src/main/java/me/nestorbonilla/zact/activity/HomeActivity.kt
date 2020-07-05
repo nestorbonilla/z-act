@@ -12,6 +12,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.facebook.drawee.backends.pipeline.Fresco
 import me.nestorbonilla.zact.R
+import me.nestorbonilla.zact.model.CreatorModel
+import me.nestorbonilla.zact.room.ZactDao
 import me.nestorbonilla.zact.room.ZactDatabase
 
 class HomeActivity : AppCompatActivity() {
@@ -19,8 +21,15 @@ class HomeActivity : AppCompatActivity() {
     lateinit var preference: SharedPreferences
     val pref_show_intro = "INTRO"
 
+    private var db: ZactDatabase? = null
+    private var zactDao: ZactDao? = null
+    private lateinit var creatorModel: CreatorModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        db = ZactDatabase.getDatabase(this)
+        zactDao = db?.zactDao()
 
         // Initialization
         Fresco.initialize(this)
@@ -33,17 +42,41 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_attendee,
-                R.id.navigation_creator,
-                R.id.navigation_setting
+        with(zactDao) {
+            creatorModel = this?.getCreator(1)!!
+        }
+
+        if (!creatorModel.seed.isEmpty()) {
+            navView.inflateMenu(R.menu.bottom_nav_attendee_menu)
+            val navController = findNavController(R.id.nav_host_fragment)
+            navController.setGraph(R.navigation.mobile_attendee_navigation)
+
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.navigation_attendee,
+                    R.id.navigation_setting
+                )
             )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+            setupActionBarWithNavController(navController, appBarConfiguration)
+            navView.setupWithNavController(navController)
+        } else {
+            navView.inflateMenu(R.menu.bottom_nav_creator_menu)
+            val navController = findNavController(R.id.nav_host_fragment)
+            navController.setGraph(R.navigation.mobile_creator_navigation)
+
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.navigation_creator,
+                    R.id.navigation_setting
+                )
+            )
+            setupActionBarWithNavController(navController, appBarConfiguration)
+            navView.setupWithNavController(navController)
+        }
+
     }
 }

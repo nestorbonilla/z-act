@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv/config');
+let port = process.env.PORT || 3000;
 
 //MIDDLEWARES
 app.use(cors());
@@ -28,4 +29,6 @@ mongoose.connect(
     },
     () => console.log('connected to zact database...'));
 
-app.listen(3000);
+app.listen(port, () => {
+    console.log(`ZAct is listening on port ${port}`);
+});

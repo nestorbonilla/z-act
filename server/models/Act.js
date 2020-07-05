@@ -1,22 +1,27 @@
 const mongoose = require('mongoose');
 
 const ActSchema = mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
     fromAddress: {
         type: String,
         required: true
     },
-    publicInfo: {
+    actAddress: {
+        type: String,
+        default: ""
+    },
+    seed: {
         type: String,
         required: true
     },
-    preSeed: {
+    title: {
         type: String,
         required: true
     },
+    publicInformation: {
+        type: String,
+        required: true
+    },
+    
     meetingPointRadius: {
         type: Number,
         default: 50

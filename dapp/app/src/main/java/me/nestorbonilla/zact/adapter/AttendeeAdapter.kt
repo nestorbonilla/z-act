@@ -30,11 +30,14 @@ class AttendeeAdapter(val context: Context):RecyclerView.Adapter<AttendeeAdapter
     }
 
     override fun onBindViewHolder(holder: DashboardHolder, position: Int) {
-        holder?.title?.text = acts.get(position).title
-        holder?.subtitle?.text = acts.get(position).description
-        holder.image.setImageURI("https://maps.googleapis.com/maps/api/staticmap?center=8.994772,-79.522794&zoom=13&size=600x300&maptype=roadmap&key=AIzaSyAdet-b7ik-7xdThfIS_GhPShjavJSUz18");
+        holder.title?.text = acts.get(position).title
+        holder.subtitle?.text = acts.get(position).publicInformation
+        val key: String = context.getString(R.string.google_maps_key)
+        var imageURI = "https://maps.googleapis.com/maps/api/staticmap?center=" + acts.get(position).meetingPoint + "&zoom=13&size=600x300&maptype=roadmap&key=" + key
+        holder.image.setImageURI(imageURI)
         holder.itemView.setOnClickListener {
             val intent = Intent(context, AttendeeDetailActivity::class.java)
+            intent.putExtra("act_id", acts.get(position).id)
             context.startActivity(intent)
         }
     }

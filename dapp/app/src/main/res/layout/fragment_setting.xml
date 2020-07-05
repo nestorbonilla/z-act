@@ -20,7 +20,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/ic_zcash_icon"/>
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/profile_role_text"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
@@ -49,14 +49,15 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent">
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/profile_action_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Attended"
                         android:textSize="20sp"
                         />
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/profile_action_count_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="10"
@@ -137,7 +138,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_wallet"/>
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/profile_address"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
