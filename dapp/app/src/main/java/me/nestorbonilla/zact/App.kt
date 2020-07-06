@@ -22,6 +22,8 @@ class App : Application() {
 
     lateinit var synchronizer: Synchronizer
     private lateinit var keyManager: SampleStorageBridge
+    //private lateinit var initializer: Initializer
+    //private lateinit var walletBirthday: Initializer.WalletBirthday
 
     var appScope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -30,6 +32,23 @@ class App : Application() {
         super.onCreate()
         Twig.plant(TroubleshootingTwig())
     }
+
+    /*
+    fun createInitializer() {
+        initializer = Initializer(this, host = config.host, port = config.port)
+        walletBirthday = config.newWalletBirthday()
+        initializer.open(walletBirthday)
+        synchronizer = Synchronizer(initializer)
+        synchronizer.start(appScope)
+    }
+
+    fun openInitializer(seedPhrase: String) {
+        val seed: ByteArray = Mnemonics.MnemonicCode(seedPhrase.toCharArray()).toSeed()
+        var spendingKeys = initializer.new(seed, walletBirthday)
+        keyManager = SampleStorageBridge().securelyStorePrivateKey(spendingKeys[0])
+        synchronizer = Synchronizer(initializer)
+        synchronizer.start(appScope)
+    }*/
 
     fun onCreateWallet(seedPhrase: String) {
 

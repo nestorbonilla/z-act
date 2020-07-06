@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -11,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.facebook.drawee.backends.pipeline.Fresco
+import me.nestorbonilla.zact.App
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.model.CreatorModel
 import me.nestorbonilla.zact.room.ZactDao
@@ -36,6 +38,11 @@ class HomeActivity : AppCompatActivity() {
         preference = getSharedPreferences("INTRO_SLIDER", Context.MODE_PRIVATE)
 
         if(preference.getBoolean(pref_show_intro, true)) {
+            //Log.d("ZACT_DAPP", "before create initializer")
+            //App.instance.createInitializer()
+            //App.instance.onCreateWallet("")
+            //App.instance.isCreated = true
+            //Log.d("ZACT_DAPP", "after create initializer")
             startActivity(Intent(this, TutorialActivity::class.java))
         }
 

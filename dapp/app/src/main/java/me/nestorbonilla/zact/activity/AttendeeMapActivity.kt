@@ -20,9 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -164,7 +162,8 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun addMarker(latLng: LatLng) {
-        var markerOptions: MarkerOptions = MarkerOptions().position(latLng)
+        var icon: BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.zpin)
+        var markerOptions: MarkerOptions = MarkerOptions().position(latLng).icon(icon)
         mMap.addMarker(markerOptions)
     }
 
@@ -172,8 +171,8 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
         var circleOptions: CircleOptions = CircleOptions()
         circleOptions.center(latLng)
         circleOptions.radius(radius.toDouble())
-        circleOptions.strokeColor(Color.argb(255, 0, 0, 0))
-        circleOptions.fillColor(Color.argb(64, 0, 0, 0))
+        circleOptions.strokeColor(Color.argb(255, 35, 31, 32))
+        circleOptions.fillColor(Color.argb(64, 35, 31, 32))
         circleOptions.strokeWidth(4F)
         mMap.addCircle(circleOptions)
     }

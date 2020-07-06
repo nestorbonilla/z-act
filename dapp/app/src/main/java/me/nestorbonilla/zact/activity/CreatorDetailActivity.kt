@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_creator_detail.*
 import me.nestorbonilla.zact.App
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.model.ActModel
+import me.nestorbonilla.zact.model.CreatorModel
 import me.nestorbonilla.zact.room.ZactDao
 import me.nestorbonilla.zact.room.ZactDatabase
 import me.nestorbonilla.zact.service.ServiceBuilder
@@ -41,6 +42,7 @@ class CreatorDetailActivity: AppCompatActivity() {
     private var isNew = true
     private lateinit var fromAddress: String
     private lateinit var actModel: ActModel
+    private lateinit var creatorModel: CreatorModel
 
     private val initializer: Initializer = Initializer(App.instance)
 
@@ -50,9 +52,6 @@ class CreatorDetailActivity: AppCompatActivity() {
 
         db = ZactDatabase.getDatabase(this)
         zactDao = db?.zactDao()
-
-        fromAddress = initializer.deriveAddress(App.instance.config.seed)
-        creator_from.setText(fromAddress)
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -150,6 +149,10 @@ class CreatorDetailActivity: AppCompatActivity() {
                         with(zactDao) {
                             this?.insertAct(act)
                             actModel = act
+
+                            // adding 1 to the record of acts created
+                            creatorModel.actsCreated++
+                            this?.updateCreator(creatorModel)
                         }
                     }
                 } else {
@@ -174,8 +177,10 @@ class CreatorDetailActivity: AppCompatActivity() {
 
     private fun loadValues(actId: Int) {
         with(zactDao) {
+            creatorModel = this?.getCreator(1)!!
             actModel = this?.getAct(actId)!!
         }
+        creator_from.setText(creatorModel.address)
         creator_title.setText(actModel.title)
         creator_public.setText(actModel.publicInformation)
         //creator_missing.setText(actModel.actAddress)

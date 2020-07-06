@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -68,6 +69,9 @@ class AttendeeDetailActivity: AppCompatActivity() {
         attendee_detail_title.setText(actModel.title)
         attendee_detail_public.setText(actModel.publicInformation)
         if (actModel.seed.split(" ").size == 24) {
+            attendee_detail_private_card.isVisible = true
+            //App.instance.onCreateWallet(actModel.seed)
+            //App.instance.isCreated = true
             App.instance.onCreateWallet(actModel.seed)
             App.instance.synchronizer.status.collectWith(App.instance.appScope, ::onStatusUpdate)
             App.instance.synchronizer.clearedTransactions.collectWith(App.instance.appScope, ::onStatusTransaction)
@@ -75,7 +79,7 @@ class AttendeeDetailActivity: AppCompatActivity() {
     }
 
     private fun onStatusUpdate(status: Synchronizer.Status) {
-        attendee_detail_button.text = status.name
+        attendee_detail_private_title.text = "Secret Information: " + status.name
     }
 
     private fun onStatusTransaction(pagedList: PagedList<ConfirmedTransaction>) {

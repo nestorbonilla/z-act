@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.activity_creator_detail.*
 import me.nestorbonilla.zact.R
@@ -34,6 +35,7 @@ class AttendeeFragment : Fragment() {
     private lateinit var actViewModel: ActViewModel
     private lateinit var adapter: AttendeeAdapter
     private lateinit var attendee_recyclerview: RecyclerView
+    private lateinit var attendee_swipe: SwipeRefreshLayout
     private lateinit var attendee_empty: SimpleDraweeView
 
     override fun onCreateView(
@@ -47,6 +49,7 @@ class AttendeeFragment : Fragment() {
         zactDao = db?.zactDao()
 
         attendee_recyclerview = root.findViewById(R.id.attendee_recyclerview)
+        attendee_swipe = root.findViewById(R.id.attendee_swipe);
         attendee_empty = root.findViewById(R.id.attendee_empty)
         attendee_recyclerview.layoutManager = LinearLayoutManager(inflater.context, LinearLayoutManager.VERTICAL, false)
         adapter = AttendeeAdapter(inflater.context)
@@ -57,7 +60,7 @@ class AttendeeFragment : Fragment() {
                 if (t.size == 0) {
                     attendee_recyclerview.isVisible = false
                     attendee_empty.isVisible = true
-                    loadValuesFromApi()
+                    //loadValuesFromApi()
                 } else {
                     attendee_recyclerview.isVisible = true
                     attendee_empty.isVisible = false
@@ -65,6 +68,11 @@ class AttendeeFragment : Fragment() {
             }
         )
         attendee_recyclerview.adapter = adapter
+        attendee_swipe.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+        attendee_swipe.setOnRefreshListener( SwipeRefreshLayout.OnRefreshListener {
+            loadValuesFromApi()
+        })
+
         return root
     }
 
@@ -74,12 +82,23 @@ class AttendeeFragment : Fragment() {
 
         requestCall.enqueue(object: Callback<List<ActModel>> {
             override fun onResponse(call: Call<List<ActModel>>, response: Response<List<ActModel>>) {
+                attendee_swipe.isRefreshing = false
                 if (response.isSuccessful) {
                     var acts = response.body()
                     with(zactDao) {
                         if (acts != null) {
-                            Log.d("ZACT_DAPP", this?.getActList().toString())
-                            //this?.insertActs(acts)
+                            for (act in acts) {
+                                var actDB = this?.getActByApiId(act._id)
+                                if (actDB == null) {
+                                    this?.insertAct(act)
+                                } else {
+                                    actDB.title = act.title
+                                    actDB.publicInformation = act.publicInformation
+                                    actDB.meetingPoint = act.meetingPoint
+                                    actDB.meetingPointRadius = act.meetingPointRadius
+                                    this?.updateAct(act)
+                                }
+                            }
                         }
                     }
                 }

@@ -2,10 +2,16 @@ package me.nestorbonilla.zact.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import cash.z.ecc.android.bip39.Mnemonics
 import cash.z.ecc.android.sdk.Initializer
+import cash.z.ecc.android.sdk.db.entity.*
+import cash.z.ecc.android.sdk.ext.collectWith
+import cash.z.ecc.android.sdk.ext.convertZecToZatoshi
+import cash.z.ecc.android.sdk.ext.twig
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -30,6 +36,7 @@ class CreatorPrivateActivity : AppCompatActivity() {
     private var isNew = true
     private lateinit var fromAddress: String
     private lateinit var actModel: ActModel
+    private var isSending = false
 
     private val initializer: Initializer = Initializer(App.instance)
 
@@ -99,5 +106,37 @@ class CreatorPrivateActivity : AppCompatActivity() {
         //creator_missing.setText(actModel.seed.split(" ").slice(22..23).toString().replace(",", "").replace("[", "").replace("]", ""))
         //creator_missing.setText(actModel.seed)
     }
+
+    /*
+    private fun onSend() {
+        //isSending = true
+        val amount = 0.0001.convertZecToZatoshi()
+        val toAddress = actModel.actAddress
+        synchronizer.sendToAddress(
+            keyManager.key,
+            amount,
+            toAddress,
+            "Demo App Funds"
+        ).collectWith(lifecycleScope, ::onPendingTxUpdated)
+    }
+
+    private fun onPendingTxUpdated(pendingTransaction: PendingTransaction?) {
+        val id = pendingTransaction?.id ?: -1
+        val message = when {
+            pendingTransaction == null -> "Transaction not found"
+            pendingTransaction.isMined() -> "Transaction Mined (id: $id)!\n\nSEND COMPLETE".also { isSending = false }
+            pendingTransaction.isSubmitSuccess() -> "Successfully submitted transaction!\nAwaiting confirmation..."
+            pendingTransaction.isFailedEncoding() -> "ERROR: failed to encode transaction! (id: $id)".also { isSending = false }
+            pendingTransaction.isFailedSubmit() -> "ERROR: failed to submit transaction! (id: $id)".also { isSending = false }
+            pendingTransaction.isCreated() -> "Transaction creation complete! (id: $id)"
+            pendingTransaction.isCreating() -> "Creating transaction!".also { onResetInfo() }
+            else -> "Transaction updated!".also { twig("Unhandled TX state: $pendingTransaction") }
+        }
+        twig("Pending TX Updated: $message")
+        binding.textInfo.apply {
+            text = "$text\n$message"
+        }
+    }
+    */
 
 }

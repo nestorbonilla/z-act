@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
@@ -71,6 +72,12 @@ class SettingFragment : Fragment() {
             if (creatorModel.seed.length == 0) {
                 showSeedDialog()
             } else {
+                creatorModel.seed = ""
+                creatorModel.address = ""
+                creatorModel.actsCreated = 0
+                with(zactDao) {
+                    this?.updateCreator(creatorModel)
+                }
                 //var refresh: Intent = Intent(requireContext(), HomeActivity::class.java)
                 //startActivity(refresh)
             }
@@ -120,10 +127,15 @@ class SettingFragment : Fragment() {
         val  mAlertDialog = mBuilder.show()
         //login button click of custom layout
         mDialogView.seed_login.setOnClickListener {
-            //dismiss dialog
-            mAlertDialog.dismiss()
             //get text from EditTexts of custom layout
             creatorModel.seed = mDialogView.seed_words.text.toString()
+            with(zactDao) {
+                this?.updateCreator(creatorModel)
+            }
+            profile_button.setText("logout")
+            profile_button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorLogout))
+            Toast.makeText(requireContext(), "You're now a creator!! Please, restart the app to create your first event.", Toast.LENGTH_LONG).show()
+            mAlertDialog.dismiss()
         }
     }
 

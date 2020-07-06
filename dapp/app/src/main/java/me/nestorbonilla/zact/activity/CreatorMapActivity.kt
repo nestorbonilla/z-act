@@ -192,8 +192,8 @@ class CreatorMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         var circleOptions: CircleOptions = CircleOptions()
         circleOptions.center(latLng)
         circleOptions.radius(radius.toDouble())
-        circleOptions.strokeColor(Color.argb(255, 255, 0, 0))
-        circleOptions.fillColor(Color.argb(64, 255, 0, 0))
+        circleOptions.strokeColor(Color.argb(255, 35, 31, 32))
+        circleOptions.fillColor(Color.argb(64, 35, 31, 32))
         circleOptions.strokeWidth(4F)
         mMap.addCircle(circleOptions)
     }
