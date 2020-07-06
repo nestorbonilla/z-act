@@ -14,6 +14,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.facebook.drawee.backends.pipeline.Fresco
 import me.nestorbonilla.zact.App
 import me.nestorbonilla.zact.R
+import me.nestorbonilla.zact.model.ActModel
+import me.nestorbonilla.zact.model.AttendeeModel
 import me.nestorbonilla.zact.model.CreatorModel
 import me.nestorbonilla.zact.room.ZactDao
 import me.nestorbonilla.zact.room.ZactDatabase
@@ -36,22 +38,14 @@ class HomeActivity : AppCompatActivity() {
         // Initialization
         Fresco.initialize(this)
         preference = getSharedPreferences("INTRO_SLIDER", Context.MODE_PRIVATE)
+        insertDefaultValues()
 
         if(preference.getBoolean(pref_show_intro, true)) {
-            //Log.d("ZACT_DAPP", "before create initializer")
-            //App.instance.createInitializer()
-            //App.instance.onCreateWallet("")
-            //App.instance.isCreated = true
-            //Log.d("ZACT_DAPP", "after create initializer")
             startActivity(Intent(this, TutorialActivity::class.java))
         }
 
         setContentView(R.layout.activity_home)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
-        with(zactDao) {
-            creatorModel = this?.getCreator(1)!!
-        }
 
         if (creatorModel.seed.isEmpty()) {
             navView.inflateMenu(R.menu.bottom_nav_attendee_menu)
@@ -84,6 +78,22 @@ class HomeActivity : AppCompatActivity() {
             setupActionBarWithNavController(navController, appBarConfiguration)
             navView.setupWithNavController(navController)
         }
+    }
 
+    private fun insertDefaultValues() {
+        with(zactDao) {
+            var actCreator = this?.getCreator(1)
+            if (actCreator == null) {
+                this?.insertAttendee(AttendeeModel(1, 0))
+                this?.insertCreator(CreatorModel(
+                    1,
+                    "",
+                    "",
+                    0)
+                )
+            } else {
+                creatorModel = actCreator
+            }
+        }
     }
 }

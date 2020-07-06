@@ -24,15 +24,27 @@
             android:layout_marginBottom="48dp"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/attendee_empty"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:backgroundImage="@drawable/ic_mail" />
+        app:layout_constraintTop_toTopOf="parent">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            app:backgroundImage="@drawable/ic_empty" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="No events to attend"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

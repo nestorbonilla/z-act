@@ -31,8 +31,12 @@ class TutorialActivity: AppCompatActivity() {
         preference = getSharedPreferences("INTRO_SLIDER" , Context.MODE_PRIVATE)
 
         fragment1.setTitle("Welcome to ZAct")
-        fragment2.setTitle("step 2")
-        fragment3.setTitle("step 3")
+        fragment1.setSubitle("")
+
+        fragment2.setTitle("Act out!")
+        fragment2.setSubitle("Attend to events, marches, and activist events securely.")
+        fragment3.setTitle("Organize your own!")
+        fragment3.setSubitle("Event details will be shared securely by using zk-SNARKs Shielded Zcash transactions.")
 
         adapter = TutorialAdapter(supportFragmentManager)
         adapter.list.add(fragment1)

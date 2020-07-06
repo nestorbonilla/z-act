@@ -57,12 +57,6 @@ class SettingFragment : Fragment() {
         db = ZactDatabase.getDatabase(requireContext())
         zactDao = db?.zactDao()
 
-        //profile_address = root.findViewById(R.id.profile_address)
-        //profile_address.text = address
-
-        //val profile_seed_phrase: TextInputLayout = root.findViewById(R.id.profile_seed_phrase)
-
-        //val profile_seed_phrase: String = ""
         loadValues()
 
         val profile_button: AppCompatButton = root.findViewById(R.id.profile_button)
@@ -78,43 +72,9 @@ class SettingFragment : Fragment() {
                 with(zactDao) {
                     this?.updateCreator(creatorModel)
                 }
-                //var refresh: Intent = Intent(requireContext(), HomeActivity::class.java)
-                //startActivity(refresh)
             }
-
-            //val intent = Intent(inflater.context, ProfileDetailActivity::class.java)
-            //startActivity(intent)
-            //var seedPhrase = profile_seed_phrase.editText?.text.toString()
-            //seedPhrase = "seed phrase"
-            //Log.d("@TWIG", seedPhrase)
-            //App.instance.onCreateWallet("")
-            //App.instance.synchronizer.status.collectWith(App.instance.appScope, ::onStatusUpdate)
-            //App.instance.synchronizer.clearedTransactions.collectWith(App.instance.appScope, ::onStatusTransaction)
         }
-
-
-
         return root
-    }
-
-
-
-    private fun onStatusTransaction(pagedList: PagedList<ConfirmedTransaction>) {
-        val lastTransaction = pagedList.lastOrNull()
-        Log.d("@TWIG", "memo = ${lastTransaction?.memo.toUtf8Memo()}")
-    }
-
-    private fun onStatusUpdate(status: Synchronizer.Status) {
-        //profile_address.text = status.name
-    }
-
-    inline fun ByteArray?.toUtf8Memo(): String {
-        // TODO: make this more official but for now, this will do
-        return if (this == null || this[0] >= 0xF5) "" else try {
-            String(this, StandardCharsets.UTF_8).trim('\u0000')
-        } catch (t: Throwable) {
-            "unable to parse memo"
-        }
     }
 
     private fun showSeedDialog() {
@@ -132,6 +92,7 @@ class SettingFragment : Fragment() {
             with(zactDao) {
                 this?.updateCreator(creatorModel)
             }
+            App.instance.onCreateWallet(creatorModel.seed)
             profile_button.setText("logout")
             profile_button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorLogout))
             Toast.makeText(requireContext(), "You're now a creator!! Please, restart the app to create your first event.", Toast.LENGTH_LONG).show()

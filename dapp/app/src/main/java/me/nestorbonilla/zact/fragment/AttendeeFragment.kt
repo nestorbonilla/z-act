@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,8 +14,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.facebook.drawee.view.SimpleDraweeView
-import kotlinx.android.synthetic.main.activity_creator_detail.*
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.adapter.AttendeeAdapter
 import me.nestorbonilla.zact.model.ActModel
@@ -36,7 +35,7 @@ class AttendeeFragment : Fragment() {
     private lateinit var adapter: AttendeeAdapter
     private lateinit var attendee_recyclerview: RecyclerView
     private lateinit var attendee_swipe: SwipeRefreshLayout
-    private lateinit var attendee_empty: SimpleDraweeView
+    private lateinit var attendee_empty: LinearLayoutCompat
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +59,7 @@ class AttendeeFragment : Fragment() {
                 if (t.size == 0) {
                     attendee_recyclerview.isVisible = false
                     attendee_empty.isVisible = true
-                    //loadValuesFromApi()
+                    loadValuesFromApi()
                 } else {
                     attendee_recyclerview.isVisible = true
                     attendee_empty.isVisible = false
@@ -104,7 +103,6 @@ class AttendeeFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<List<ActModel>>, t: Throwable) {
-
             }
         })
     }

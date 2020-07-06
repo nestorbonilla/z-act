@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -24,7 +25,7 @@ class CreatorFragment : Fragment() {
     private lateinit var actViewModel: ActViewModel
     private lateinit var adapter: CreatorAdapter
     private lateinit var creator_recyclerview: RecyclerView
-    private lateinit var creator_empty: SimpleDraweeView
+    private lateinit var creator_empty: LinearLayoutCompat
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import cash.z.ecc.android.bip39.Mnemonics
+import cash.z.ecc.android.bip39.toSeed
 import cash.z.ecc.android.sdk.Initializer
 import cash.z.ecc.android.sdk.db.entity.*
 import cash.z.ecc.android.sdk.ext.collectWith
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_creator_private.*
 import me.nestorbonilla.zact.App
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.model.ActModel
+import me.nestorbonilla.zact.model.CreatorModel
 import me.nestorbonilla.zact.room.ZactDao
 import me.nestorbonilla.zact.room.ZactDatabase
 import me.nestorbonilla.zact.service.ServiceBuilder
@@ -36,6 +38,7 @@ class CreatorPrivateActivity : AppCompatActivity() {
     private var isNew = true
     private lateinit var fromAddress: String
     private lateinit var actModel: ActModel
+    private lateinit var creatorModel: CreatorModel
     private var isSending = false
 
     private val initializer: Initializer = Initializer(App.instance)
@@ -58,41 +61,20 @@ class CreatorPrivateActivity : AppCompatActivity() {
 
         // verify if is a new or a previous act
         var actId = intent.getIntExtra("act_id", 0)
-
-        if (actId > 0) {
-            isNew = false
-            loadValues(actId)
-            //loadValues(actId)
-            //creator_map_button.isEnabled = true
-            //creator_map_button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
-            //creator_private_button.isEnabled = true
-            //creator_private_button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
-        }
+        loadValues(actId)
 
         creator_private_send_button.setOnClickListener({
             Observable.fromCallable(
                 {
-                    db?.zactDao()?.getActList()
+                    sendTransaction()
                 }
             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
-            //this.finish()
         })
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed();
         return true;
-    }
-
-
-    inline fun ByteArray?.toUtf8Memo(): String {
-        // TODO: make this more official but for now, this will do
-        return if (this == null || this[0] >= 0xF5) "" else try {
-            String(this, StandardCharsets.UTF_8).trim('\u0000')
-        } catch (t: Throwable) {
-            "unable to parse memo"
-        }
     }
 
     private fun loadValues(actId: Int) {
@@ -107,17 +89,23 @@ class CreatorPrivateActivity : AppCompatActivity() {
         //creator_missing.setText(actModel.seed)
     }
 
-    /*
-    private fun onSend() {
-        //isSending = true
-        val amount = 0.0001.convertZecToZatoshi()
+
+    private fun sendTransaction() {
+        isSending = true
+        val amount = 0.00001.convertZecToZatoshi()
         val toAddress = actModel.actAddress
-        synchronizer.sendToAddress(
-            keyManager.key,
+        val spendingKeys = getSpendingKey()
+        App.instance.synchronizer?.sendToAddress(
+            getSpendingKey(),
             amount,
             toAddress,
-            "Demo App Funds"
-        ).collectWith(lifecycleScope, ::onPendingTxUpdated)
+            creator_private_memo.text.toString()
+        )?.collectWith(lifecycleScope, ::onPendingTxUpdated)
+    }
+
+    private fun getSpendingKey() : String {
+        val seed = Mnemonics.MnemonicCode(creatorModel.seed).toSeed()
+        return Initializer(this).deriveSpendingKeys(seed)[0]
     }
 
     private fun onPendingTxUpdated(pendingTransaction: PendingTransaction?) {
@@ -133,10 +121,11 @@ class CreatorPrivateActivity : AppCompatActivity() {
             else -> "Transaction updated!".also { twig("Unhandled TX state: $pendingTransaction") }
         }
         twig("Pending TX Updated: $message")
-        binding.textInfo.apply {
-            text = "$text\n$message"
-        }
+        creator_private_status.setText(message)
     }
-    */
+
+    private fun onResetInfo() {
+        creator_private_status.setText("Active Transaction:")
+    }
 
 }

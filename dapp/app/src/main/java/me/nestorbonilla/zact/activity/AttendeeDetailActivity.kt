@@ -3,6 +3,7 @@ package me.nestorbonilla.zact.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
@@ -51,9 +52,13 @@ class AttendeeDetailActivity: AppCompatActivity() {
         attendee_detail_image.setImageURI(imageURI)
 
         attendee_map_button.setOnClickListener {
-            val intent = Intent(this, AttendeeMapActivity::class.java)
-            intent.putExtra("act_id", actModel.id)
-            this.startActivity(intent)
+            if (actModel.seed.split(" ").size == 24) {
+                Toast.makeText(applicationContext, "You already unlocked the private information.", Toast.LENGTH_LONG).show()
+            } else {
+                val intent = Intent(this, AttendeeMapActivity::class.java)
+                intent.putExtra("act_id", actModel.id)
+                this.startActivity(intent)
+            }
         }
     }
 
@@ -70,11 +75,11 @@ class AttendeeDetailActivity: AppCompatActivity() {
         attendee_detail_public.setText(actModel.publicInformation)
         if (actModel.seed.split(" ").size == 24) {
             attendee_detail_private_card.isVisible = true
-            //App.instance.onCreateWallet(actModel.seed)
-            //App.instance.isCreated = true
-            App.instance.onCreateWallet(actModel.seed)
-            App.instance.synchronizer.status.collectWith(App.instance.appScope, ::onStatusUpdate)
-            App.instance.synchronizer.clearedTransactions.collectWith(App.instance.appScope, ::onStatusTransaction)
+            if (App.instance.synchronizer == null) {
+                App.instance.onOpenWallet()
+                App.instance.synchronizer?.status?.collectWith(App.instance.appScope, ::onStatusUpdate)
+                App.instance.synchronizer?.clearedTransactions?.collectWith(App.instance.appScope, ::onStatusTransaction)
+            }
         }
     }
 

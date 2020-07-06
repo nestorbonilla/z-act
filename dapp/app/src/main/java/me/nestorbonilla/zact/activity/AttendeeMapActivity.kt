@@ -2,20 +2,23 @@ package me.nestorbonilla.zact.activity
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,13 +28,14 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_attendee_map.*
-import kotlinx.android.synthetic.main.activity_creator_detail.*
-import me.nestorbonilla.zact.utility.GeofenceHelper
+import me.nestorbonilla.zact.App
 import me.nestorbonilla.zact.R
 import me.nestorbonilla.zact.model.ActModel
+import me.nestorbonilla.zact.model.AttendeeModel
 import me.nestorbonilla.zact.room.ZactDao
 import me.nestorbonilla.zact.room.ZactDatabase
 import me.nestorbonilla.zact.utility.GeofenceBroadcastReceiver
+import me.nestorbonilla.zact.utility.GeofenceHelper
 
 class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -41,8 +45,11 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var geofenceHelper: GeofenceHelper
     private var actId: Int = 0
     private lateinit var actModel: ActModel
+    private lateinit var attendeeModel: AttendeeModel
     private var db: ZactDatabase? = null
     private var zactDao: ZactDao? = null
+    //private var lbc: LocalBroadcastManager? = null
+    private var zactReceiver: ZactReceiver? = null
 
     private var GEOFENCE_ID = "2607"
     private var FINE_LOCATION_ACCESS_REQUEST_CODE = 1001
@@ -65,7 +72,10 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
         geofenceHelper = GeofenceHelper(this)
 
         // this need to be activated from the broadcast receiver
-        activateUnlockButton()
+        var actActive = intent.getBooleanExtra("act_unlock", false)
+        if (actActive) {
+            activateUnlockButton()
+        }
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -80,6 +90,20 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        zactReceiver = ZactReceiver()
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(zactReceiver!!, IntentFilter("zactgeofence"))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (zactReceiver != null) {
+            LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(zactReceiver!!)
+            zactReceiver = null
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -180,6 +204,7 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadValues() {
         with(zactDao) {
             actModel = this?.getAct(actId)!!
+            attendeeModel = this?.getAttendee(1)
         }
     }
 
@@ -198,8 +223,19 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
             actModel.seed = actModel.seed + " " + missingWords
             with(zactDao) {
                 this?.insertAct(actModel)
+                attendeeModel.actsAttended++
+                this?.updateAttendee(attendeeModel)
+                App.instance.onCreateWallet(actModel.seed)
                 finish()
             }
         }
+    }
+
+    inner class ZactReceiver: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Toast.makeText(context, "You arrived the location, now look for the missing words.", Toast.LENGTH_LONG).show()
+            activateUnlockButton()
+        }
+
     }
 }
