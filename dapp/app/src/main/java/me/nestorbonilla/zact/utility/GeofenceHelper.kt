@@ -29,7 +29,7 @@ open class GeofenceHelper(base: Context?) : ContextWrapper(base) {
             .setCircularRegion(latLng.latitude, latLng.longitude, radius)
             .setRequestId(ID)
             .setTransitionTypes(transitionTypes)
-            .setLoiteringDelay(5000)
+            .setLoiteringDelay(1000)
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .build()
     }

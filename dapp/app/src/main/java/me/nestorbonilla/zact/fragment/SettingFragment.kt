@@ -80,9 +80,9 @@ class SettingFragment : Fragment() {
             //var seedPhrase = profile_seed_phrase.editText?.text.toString()
             //seedPhrase = "seed phrase"
             //Log.d("@TWIG", seedPhrase)
-            App.instance.onCreateWallet("")
-            App.instance.synchronizer.status.collectWith(App.instance.appScope, ::onStatusUpdate)
-            App.instance.synchronizer.clearedTransactions.collectWith(App.instance.appScope, ::onStatusTransaction)
+            //App.instance.onCreateWallet("")
+            //App.instance.synchronizer.status.collectWith(App.instance.appScope, ::onStatusUpdate)
+            //App.instance.synchronizer.clearedTransactions.collectWith(App.instance.appScope, ::onStatusTransaction)
         }
 
 

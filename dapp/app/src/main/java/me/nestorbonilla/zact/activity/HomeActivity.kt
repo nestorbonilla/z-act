@@ -46,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
             creatorModel = this?.getCreator(1)!!
         }
 
-        if (!creatorModel.seed.isEmpty()) {
+        if (creatorModel.seed.isEmpty()) {
             navView.inflateMenu(R.menu.bottom_nav_attendee_menu)
             val navController = findNavController(R.id.nav_host_fragment)
             navController.setGraph(R.navigation.mobile_attendee_navigation)

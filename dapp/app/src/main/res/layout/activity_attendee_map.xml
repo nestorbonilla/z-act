@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:gravity="center"
-            android:text="Please, fill here the two remaining missing words you will find in the pointer area: " />
+            android:text="Please, fill here the two remaining words you will find in the pointer area: " />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -31,19 +31,19 @@
             android:layout_marginBottom="20dp"
             android:hint="Missing words">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/creator_from"
+                android:id="@+id/attendee_missing_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/creator_detail_map_button"
+            android:id="@+id/attendee_detail_map_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
-            android:background="@color/colorPrimary"
+            android:background="@color/common_google_signin_btn_text_light_disabled"
             android:elevation="3dp"
+            android:enabled="false"
             android:text="Unlock private information"
             app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>

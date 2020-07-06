@@ -2,11 +2,13 @@ package me.nestorbonilla.zact.activity
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.Geofence
@@ -21,30 +23,70 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_attendee_map.*
+import kotlinx.android.synthetic.main.activity_creator_detail.*
 import me.nestorbonilla.zact.utility.GeofenceHelper
 import me.nestorbonilla.zact.R
+import me.nestorbonilla.zact.model.ActModel
+import me.nestorbonilla.zact.room.ZactDao
+import me.nestorbonilla.zact.room.ZactDatabase
+import me.nestorbonilla.zact.utility.GeofenceBroadcastReceiver
 
-class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var TAG = "MapsActivity"
     private lateinit var mMap: GoogleMap
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var geofenceHelper: GeofenceHelper
+    private var actId: Int = 0
+    private lateinit var actModel: ActModel
+    private var db: ZactDatabase? = null
+    private var zactDao: ZactDao? = null
 
-    private var GEOFENCE_RADIUS = 200F
-    private var GEOFENCE_ID = "SOME_GEOFENCE_ID"
+    private var GEOFENCE_ID = "2607"
     private var FINE_LOCATION_ACCESS_REQUEST_CODE = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_attendee_map)
+
+        db = ZactDatabase.getDatabase(this)
+        zactDao = db?.zactDao()
+        actId = intent.getIntExtra("act_id", 0)
+        loadValues()
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.attendee_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         geofencingClient = LocationServices.getGeofencingClient(this)
         geofenceHelper = GeofenceHelper(this)
+
+        // this need to be activated from the broadcast receiver
+        activateUnlockButton()
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar()?.setDisplayShowHomeEnabled(true);
+        }
+
+        attendee_detail_map_button.setOnClickListener({
+            Observable.fromCallable(
+                {
+                    saveAct()
+                }
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe()
+        })
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed();
+        return true;
     }
 
     /**
@@ -59,13 +101,15 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Eiffel Tower and move the camera
-        val panama = LatLng(9.000758, -79.530742)
-        mMap.addMarker(MarkerOptions().position(panama).title("Marker in Panama"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(panama, 16F))
+        var currentLocation = LatLng(actModel.meetingPoint.split(",")[0].toDouble(), actModel.meetingPoint.split(",")[1].toDouble())
+
+        //mMap.addMarker(MarkerOptions().position(panama).title("Marker in Panama"))
+        addMarker(currentLocation)
+        addCircle(currentLocation, actModel.meetingPointRadius.toFloat())
+        addGeofence(currentLocation, actModel.meetingPointRadius.toFloat())
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16F))
 
         enableUserLocation()
-        mMap.setOnMapLongClickListener(this)
     }
 
     fun enableUserLocation() {
@@ -98,24 +142,19 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         }
     }
 
-    override fun onMapLongClick(latLng: LatLng) {
-        mMap.clear()
-        addMarker(latLng)
-        addCircle(latLng, GEOFENCE_RADIUS)
-        addGeofence(latLng, GEOFENCE_RADIUS)
-    }
-
     @SuppressLint("MissingPermission")
     fun addGeofence(latLng: LatLng, radius: Float) {
-        var geofence: Geofence = geofenceHelper
-            .getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER)
+        var geofence: Geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER)
         var geofencingRequest: GeofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
-        Log.d(TAG, "get pendingIntent")
+
         var pendingIntent: PendingIntent = geofenceHelper.getPendingIntent()
-        //geofencingClient.addGeofences(geofencingRequest, pendingIntent).addOnSuccessListener()
+        //geofencingClient.addGeofences(geofencingRequest, pendingIntent)
         geofencingClient.addGeofences(geofencingRequest, pendingIntent)?.run {
             addOnSuccessListener {
                 Log.d(TAG, "onSuccess: Geofence Added...")
+            }
+            addOnCompleteListener {
+                Log.d(TAG, "onComplete: Geofence completed...")
             }
             addOnFailureListener {
                 var errorMessage: String = geofenceHelper.getErrorString(it)
@@ -133,9 +172,35 @@ class AttendeeMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         var circleOptions: CircleOptions = CircleOptions()
         circleOptions.center(latLng)
         circleOptions.radius(radius.toDouble())
-        circleOptions.strokeColor(Color.argb(255, 255, 0, 0))
-        circleOptions.fillColor(Color.argb(64, 255, 0, 0))
+        circleOptions.strokeColor(Color.argb(255, 0, 0, 0))
+        circleOptions.fillColor(Color.argb(64, 0, 0, 0))
         circleOptions.strokeWidth(4F)
         mMap.addCircle(circleOptions)
+    }
+
+    private fun loadValues() {
+        with(zactDao) {
+            actModel = this?.getAct(actId)!!
+        }
+    }
+
+    private fun activateUnlockButton() {
+        attendee_detail_map_button.isEnabled = true
+        attendee_detail_map_button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
+    }
+
+    private fun saveAct() {
+        var missingWords = attendee_missing_text.text
+        if (missingWords?.isEmpty()!!) {
+            Toast.makeText(this, "Missing words cannot be empty.", Toast.LENGTH_SHORT)
+        } else if(missingWords.split(" ").size != 2) {
+            Toast.makeText(this, "You need to add the two missing words separated by space.", Toast.LENGTH_SHORT)
+        } else {
+            actModel.seed = actModel.seed + " " + missingWords
+            with(zactDao) {
+                this?.insertAct(actModel)
+                finish()
+            }
+        }
     }
 }

@@ -73,21 +73,15 @@ class AttendeeFragment : Fragment() {
         val requestCall = zactService.getActList()
 
         requestCall.enqueue(object: Callback<List<ActModel>> {
-
             override fun onResponse(call: Call<List<ActModel>>, response: Response<List<ActModel>>) {
                 if (response.isSuccessful) {
-                    //Log.d("ZACT_APP", response.body().toString())
-                    var acts = response.body() // Use it or ignore it
-                    Log.d("HELLO", acts.toString())
+                    var acts = response.body()
                     with(zactDao) {
                         if (acts != null) {
-                            this?.insertActs(acts)
+                            Log.d("ZACT_DAPP", this?.getActList().toString())
+                            //this?.insertActs(acts)
                         }
-                        //actViewModel = acts
                     }
-
-                } else {
-                    //Log.d("ZACT_APP", response.body().toString())
                 }
             }
             override fun onFailure(call: Call<List<ActModel>>, t: Throwable) {
