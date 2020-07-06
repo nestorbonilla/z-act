@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
+import cash.z.ecc.android.sdk.Initializer
 import cash.z.ecc.android.sdk.Synchronizer
 import cash.z.ecc.android.sdk.db.entity.ConfirmedTransaction
 import cash.z.ecc.android.sdk.ext.collectWith
@@ -25,6 +26,7 @@ import me.nestorbonilla.zact.model.AttendeeModel
 import me.nestorbonilla.zact.model.CreatorModel
 import me.nestorbonilla.zact.room.ZactDao
 import me.nestorbonilla.zact.room.ZactDatabase
+import me.nestorbonilla.zact.utility.SimpleMnemonics
 import java.nio.charset.StandardCharsets
 
 
@@ -40,6 +42,7 @@ class SettingFragment : Fragment() {
     private lateinit var profile_action_count_text: AppCompatTextView
     private lateinit var profile_address: AppCompatTextView
     private lateinit var profile_button: AppCompatButton
+    private val initializer: Initializer = Initializer(App.instance)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,10 +92,12 @@ class SettingFragment : Fragment() {
         mDialogView.seed_login.setOnClickListener {
             //get text from EditTexts of custom layout
             creatorModel.seed = mDialogView.seed_words.text.toString()
+            App.instance.onCreateWallet(creatorModel.seed)
+            creatorModel.address = initializer.deriveAddress(SimpleMnemonics().toSeed(creatorModel.seed.toCharArray()))
             with(zactDao) {
                 this?.updateCreator(creatorModel)
             }
-            App.instance.onCreateWallet(creatorModel.seed)
+
             profile_button.setText("logout")
             profile_button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorLogout))
             Toast.makeText(requireContext(), "You're now a creator!! Please, restart the app to create your first event.", Toast.LENGTH_LONG).show()

@@ -235,6 +235,7 @@ class CreatorMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         } else {
             with(zactDao) {
                 var act = this?.getAct(currentId)
+                Log.d(TAG, "ZACT DAPP" + act.toString())
                 if (act != null) {
 
                     act.meetingPointRadius = radiusToUpdate.toInt()

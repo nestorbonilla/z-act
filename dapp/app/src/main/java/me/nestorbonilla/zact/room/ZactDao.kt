@@ -23,6 +23,9 @@ interface ZactDao {
     @Query("SELECT * FROM act WHERE id = :id LIMIT 1")
     fun getAct(id: Int): ActModel
 
+    @Query("SELECT * FROM act ORDER BY id DESC LIMIT 1")
+    fun getLastAct(): ActModel
+
     @Query("SELECT * FROM act WHERE _id = :id LIMIT 1")
     fun getActByApiId(id: String): ActModel
 

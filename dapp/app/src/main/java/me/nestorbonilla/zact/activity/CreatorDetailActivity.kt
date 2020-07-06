@@ -39,8 +39,6 @@ class CreatorDetailActivity: AppCompatActivity() {
 
     private var db: ZactDatabase? = null
     private var zactDao: ZactDao? = null
-    private var isNew = true
-    private lateinit var fromAddress: String
     private lateinit var actModel: ActModel
     private lateinit var creatorModel: CreatorModel
 
@@ -63,12 +61,13 @@ class CreatorDetailActivity: AppCompatActivity() {
         var actId = intent.getIntExtra("act_id", 0)
 
         if (actId > 0) {
-            isNew = false
             loadValues(actId)
             creator_map_button.isEnabled = true
             creator_map_button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
             creator_private_button.isEnabled = true
             creator_private_button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        } else {
+            loadDefaultValues()
         }
 
         creator_detail_button.setOnClickListener({
@@ -102,20 +101,17 @@ class CreatorDetailActivity: AppCompatActivity() {
 
     private fun saveAct() {
 
-        //1. Get from z address
-        creator_from.setText(fromAddress)
-
-        //2. Generate new seed phrase
+        //1. Generate new seed phrase
         val fullSeedPhrase = Mnemonics.MnemonicCode(Mnemonics.WordCount.COUNT_24).joinToString().replace(",", "")
         val actAddress = initializer.deriveAddress(SimpleMnemonics().toSeed(fullSeedPhrase.toCharArray()))
         val preSeedPhrase = fullSeedPhrase.split(" ").slice(0..21).toString().replace(",", "").replace("[", "").replace("]", "")
         val missingWords = fullSeedPhrase.split(" ").slice(22..23).toString().replace(",", "").replace("[", "").replace("]", "")
 
-        //3. Create ActModel object
+        //2. Create ActModel object
         var act = ActModel(
             0,
             "",
-            fromAddress,
+            creatorModel.address,
             actAddress,
             preSeedPhrase,
             creator_title.text.toString(),
@@ -124,7 +120,7 @@ class CreatorDetailActivity: AppCompatActivity() {
             ""
         )
 
-        //4. Send it to the API
+        //3. Send it to the API
         val zactService = ServiceBuilder.buildService(ZactService::class.java)
         val requestCall = zactService.addAct(act)
 
@@ -148,7 +144,7 @@ class CreatorDetailActivity: AppCompatActivity() {
                         act.actAddress = actAddress
                         with(zactDao) {
                             this?.insertAct(act)
-                            actModel = act
+                            actModel = this?.getLastAct()!!
 
                             // adding 1 to the record of acts created
                             creatorModel.actsCreated++
@@ -165,67 +161,23 @@ class CreatorDetailActivity: AppCompatActivity() {
         })
     }
 
-
-    inline fun ByteArray?.toUtf8Memo(): String {
-        // TODO: make this more official but for now, this will do
-        return if (this == null || this[0] >= 0xF5) "" else try {
-            String(this, StandardCharsets.UTF_8).trim('\u0000')
-        } catch (t: Throwable) {
-            "unable to parse memo"
-        }
-    }
-
     private fun loadValues(actId: Int) {
         with(zactDao) {
             creatorModel = this?.getCreator(1)!!
             actModel = this?.getAct(actId)!!
         }
+        Log.d("ZACT_DAPP", creatorModel.address)
         creator_from.setText(creatorModel.address)
         creator_title.setText(actModel.title)
         creator_public.setText(actModel.publicInformation)
-        //creator_missing.setText(actModel.actAddress)
         creator_missing.setText(actModel.seed.split(" ").slice(22..23).toString().replace(",", "").replace("[", "").replace("]", ""))
-        //creator_missing.setText(actModel.seed)
     }
 
-/*
-    private fun startSynchronizer() {
-        lifecycleScope.apply {
-            synchronizer.start(this)
+    private fun loadDefaultValues() {
+        with(zactDao) {
+            creatorModel = this?.getCreator(1)!!
         }
+        creator_from.setText(creatorModel.address)
     }
 
-    private fun onSend(unused: View) {
-        isSending = true
-        val amount = amountInput.text.toString().toDouble().convertZecToZatoshi()
-        val toAddress = addressInput.text.toString().trim()
-        synchronizer.sendToAddress(
-            keyManager.key,
-            amount,
-            toAddress,
-            "Demo App Funds"
-        ).collectWith(lifecycleScope, ::onPendingTxUpdated)
-    }
-
-    private fun onPendingTxUpdated(pendingTransaction: PendingTransaction?) {
-        val id = pendingTransaction?.id ?: -1
-        val message = when {
-            pendingTransaction == null -> "Transaction not found"
-            pendingTransaction.isMined() -> "Transaction Mined (id: $id)!\n\nSEND COMPLETE".also { isSending = false }
-            pendingTransaction.isSubmitSuccess() -> "Successfully submitted transaction!\nAwaiting confirmation..."
-            pendingTransaction.isFailedEncoding() -> "ERROR: failed to encode transaction! (id: $id)".also { isSending = false }
-            pendingTransaction.isFailedSubmit() -> "ERROR: failed to submit transaction! (id: $id)".also { isSending = false }
-            pendingTransaction.isCreated() -> "Transaction creation complete! (id: $id)"
-            pendingTransaction.isCreating() -> "Creating transaction!".also { onResetInfo() }
-            else -> "Transaction updated!".also { twig("Unhandled TX state: $pendingTransaction") }
-        }
-        twig("Pending TX Updated: $message")
-        binding.textInfo.apply {
-            text = "$text\n$message"
-        }
-    }
-
-    private fun onResetInfo() {
-        binding.textInfo.text = "Active Transaction:"
-    }*/
 }
