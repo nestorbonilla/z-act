@@ -10,7 +10,7 @@
 ## Privacy Hackathon
 > The Protecting Privacy Virtual Hackathon invites hackers to interact with and build on a wide range of privacy-focused projects to help users protect themselves, their data, and their money in the face of increasing surveillance by both state and corporate actors. For this project, I will publish the following deliverables:
 
-* [Video](https://youtube.com/)
+* [Video](https://youtu.be/SYVy5C8DYxU)
 * [Documentation](https://nestorbonilla.gitbook.io/zact/)
 * [Mobile DApp](https://github.com/nestorbonilla/z-act/tree/master/dapp)
 * [Server](https://github.com/nestorbonilla/z-act/tree/master/server)
